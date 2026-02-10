@@ -70,8 +70,7 @@ exocortex-template/
 ├── .claude/settings.local.json  # Permissions
 ├── memory/                      # Оперативная память (7 файлов)
 ├── strategist-agent/            # Агент-стратег (промпты + скрипты + launchd)
-├── my-strategy/                 # Стратегический хаб (планы, отчёты)
-└── ecosystem-governance/        # Координация (процессы, реестр)
+└── my-strategy/                 # Стратегический хаб (планы, отчёты)
 ```
 
 ## Placeholder-переменные
