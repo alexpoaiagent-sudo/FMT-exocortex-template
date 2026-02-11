@@ -11,9 +11,9 @@
 ```
 Pack (source-of-truth)          Code (инструмент)              Results (результаты)
 ──────────────────────          ─────────────────              ────────────────────
-Ваш Pack-репо/                  strategist-agent/              my-strategy/
+Ваш Pack-репо/                  DS-strategist/              DS-strategy/
   agent-passport.md               prompts/                       current/
-  scenarios/                        strategy.md                    WeekPlan W{N}.md
+  scenarios/                        session-prep.md                WeekPlan W{N}.md
     scheduled/                      day-plan.md                    WeekReport W{N}.md
     on-demand/                      evening.md                     DayPlan YYYY-MM-DD.md
                                     week-review.md               docs/
@@ -40,14 +40,14 @@ Pack (source-of-truth)          Code (инструмент)              Results
 
 | # | Скил | Промпт | Триггер | Статус |
 |---|------|--------|---------|--------|
-| 1 | Сессия стратегирования | `strategy.md` | Пн утро + вручную | Реализован |
+| 1 | Подготовка к сессии + Стратегирование | `session-prep.md` | Пн утро + вручную | Реализован |
 | 2 | План на день | `day-plan.md` | Вт-Вс утро + вручную | Реализован |
 | 3 | Вечерний итог | `evening.md` | Вручную | Реализован |
 | 4 | Итоги недели | `week-review.md` | Вс ночь | Реализован |
 | 5 | Добавить РП | `add-wp.md` | Вручную | Реализован |
 | 6 | Проверить задачу (WP Gate) | `check-plan.md` | WP Gate | Реализован |
 | 7 | Закрытие дня | `day-close.md` | Вручную | Реализован |
-| 8 | Каскадное обновление | `strategy-cascade.md` | После week-review | Реализован |
+| ~~8~~ | ~~Каскадное обновление~~ | — | — | **Поглощён session-prep** |
 
 ---
 
@@ -55,7 +55,7 @@ Pack (source-of-truth)          Code (инструмент)              Results
 
 | Время (UTC) | День | Сценарий | Plist |
 |-------------|------|----------|-------|
-| {{TIMEZONE_HOUR}}:00 | Понедельник | `strategy` | `com.strategist.morning` |
+| {{TIMEZONE_HOUR}}:00 | Понедельник | `session-prep` | `com.strategist.morning` |
 | {{TIMEZONE_HOUR}}:00 | Вт-Вс | `day-plan` | `com.strategist.morning` |
 | 00:00 | Понедельник | `week-review` | `com.strategist.weekreview` |
 

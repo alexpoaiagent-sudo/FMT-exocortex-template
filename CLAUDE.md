@@ -29,7 +29,7 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 
 ### Реестр
 
-`ecosystem-governance/0.OPS/REPOSITORY-REGISTRY.md`
+`DS-ops/0.OPS/REPOSITORY-REGISTRY.md`
 
 > Детали (измерения 2-4, именование, планирование): → `memory/repo-type-rules.md`
 
@@ -66,7 +66,7 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 3. Спросить: артефакт, формулировка РП, репо, бюджет
 4. Предложить перестановку РП если бюджет ограничен
 5. Дождаться подтверждения
-6. Записать в MEMORY.md + `my-strategy/current/`
+6. Записать в MEMORY.md + `DS-strategy/current/`
 7. Только после записи — начать
 
 #### 2.4. Исключения (РП не нужен)
@@ -123,8 +123,8 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 5. Обновить MEMORY.md (статус РП)
 6. Зафиксировать: что сделано, что осталось
 7. Закоммитить (с подтверждением)
-8. Обновить `my-strategy/current/Plan W{N}...` (статусы РП)
-9. Синхронизировать backup: `memory/ + CLAUDE.md → my-strategy/exocortex/`
+8. Обновить `DS-strategy/current/Plan W{N}...` (статусы РП)
+9. Синхронизировать backup: `memory/ + CLAUDE.md → DS-strategy/exocortex/`
 
 **Шаблон отчёта Close:**
 
@@ -141,9 +141,9 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 
 - [ ] Все изменения закоммичены и запушены
 - [ ] MEMORY.md обновлён (статусы РП)
-- [ ] my-strategy/current/Plan обновлён
+- [ ] DS-strategy/current/Plan обновлён
 - [ ] Captures применены
-- [ ] Backup → my-strategy/exocortex/ синхронизирован
+- [ ] Backup → DS-strategy/exocortex/ синхронизирован
 - [ ] Отчёт Close сформирован
 
 Все пункты выполнены → «Сессия закрыта.» Иначе — указать, что осталось.
@@ -155,10 +155,10 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 | Протокол | Владелец | Где описан |
 |----------|----------|-----------|
 | Open, Work, Close | Claude Code (сессия) | Этот файл |
-| Strategy Session | Стратег (launchd, Пн) | strategist-agent/prompts/strategy.md |
-| Day-Plan | Стратег (launchd, Вт-Вс) | strategist-agent/prompts/day-plan.md |
-| Day-Close | Стратег (ручной, по запросу) | strategist-agent/prompts/day-close.md |
-| Week-Review | Стратег (launchd, Вс) | strategist-agent/prompts/week-review.md |
+| Strategy Session | Стратег (launchd, Пн) | DS-strategist/prompts/strategy.md |
+| Day-Plan | Стратег (launchd, Вт-Вс) | DS-strategist/prompts/day-plan.md |
+| Day-Close | Стратег (ручной, по запросу) | DS-strategist/prompts/day-close.md |
+| Week-Review | Стратег (launchd, Вс) | DS-strategist/prompts/week-review.md |
 
 ---
 
@@ -176,8 +176,8 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 
 | Категория | Где |
 |-----------|-----|
-| Пользовательские сценарии | `ecosystem-governance/PROCESSES.md` |
-| Платформенные сценарии | `ecosystem-governance/PROCESSES.md` |
+| Пользовательские сценарии | `DS-ops/PROCESSES.md` |
+| Платформенные сценарии | `DS-ops/PROCESSES.md` |
 | Внутренние процессы системы | `<repo>/PROCESSES.md` |
 
 ### Правило процесса (ступенчатое)
@@ -186,7 +186,7 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 |---------|-----------|
 | Баг-фикс, ≤15 мин | Не нужен |
 | Изменение внутри системы | PROCESSES.md этого репо |
-| Межсистемная фича | ecosystem-governance/PROCESSES.md |
+| Межсистемная фича | DS-ops/PROCESSES.md |
 | Новая система | Сценарий + процессы + данные (ВДВ) |
 
 ---
@@ -201,7 +201,7 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 | Терминологическая путаница | `memory/hard-distinctions.md` |
 | Нужен FPF-паттерн | `memory/fpf-reference.md` |
 | Создание документа | `memory/checklists.md` |
-| Детали Стратега | `strategist-agent/README.md` |
+| Детали Стратега | `DS-strategist/README.md` |
 
 ### Политика memory/
 
@@ -216,7 +216,7 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 
 ### Backup
 
-На Close и Day-Close: `memory/ + {{WORKSPACE_DIR}}/CLAUDE.md → my-strategy/exocortex/`
+На Close и Day-Close: `memory/ + {{WORKSPACE_DIR}}/CLAUDE.md → DS-strategy/exocortex/`
 
 ---
 
@@ -229,4 +229,4 @@ FPF (1-й) → SPF (2-й) → Pack (3-й, знания) → Downstream (4-й, м
 
 ---
 
-*Шаблон из exocortex-template. Настройте под свою экосистему.*
+*Шаблон из FMT-exocortex. Настройте под свою экосистему.*
