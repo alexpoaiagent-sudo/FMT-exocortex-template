@@ -89,11 +89,11 @@ Governance-хаб для управления задачами и стратег
 ## Механизм обновлений
 
 ```
-[upstream] TserenTserenov/FMT-exocortex
+[upstream] TserenTserenov/FMT-exocortex-template
     │
     │  git fetch upstream && git merge upstream/main
     ▼
-[fork] user/FMT-exocortex
+[fork] user/FMT-exocortex-template
     │
     │  Подстановка переменных (setup.sh, один раз)
     ▼

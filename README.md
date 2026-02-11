@@ -19,16 +19,16 @@
 ### 1. Fork
 
 ```bash
-gh repo fork TserenTserenov/FMT-exocortex --clone
+gh repo fork TserenTserenov/FMT-exocortex-template --clone
 ```
 
 ### 2. Setup
 
-Используйте [DS-exocortex-setup](https://github.com/TserenTserenov/DS-exocortex-setup) для автоматической настройки:
+Используйте [DS-exocortex-setup-agent](https://github.com/TserenTserenov/DS-exocortex-setup-agent) для автоматической настройки:
 
 ```bash
-gh repo clone TserenTserenov/DS-exocortex-setup
-cd DS-exocortex-setup
+gh repo clone TserenTserenov/DS-exocortex-setup-agent
+cd DS-exocortex-setup-agent
 bash setup.sh
 ```
 
@@ -55,7 +55,7 @@ claude
 ## Обновления из upstream
 
 ```bash
-git remote add upstream https://github.com/TserenTserenov/FMT-exocortex.git
+git remote add upstream https://github.com/TserenTserenov/FMT-exocortex-template.git
 git fetch upstream
 git merge upstream/main
 ```
