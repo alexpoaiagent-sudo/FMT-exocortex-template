@@ -50,7 +50,7 @@
 
 ### Именование downstream-instrument для ИИ-систем
 
-Конвенция: `DS-{slug}` (примеры: `DS-strategist-agent`, `DS-extractor-agent`).
+Конвенция: `DS-{slug}` (примеры: `DS-ai-systems`, `DS-my-strategy`).
 Привязка к Pack через `source-of-truth: {ID}` в CLAUDE.md репо, не через имя.
 | `governance` | Планы, реестры, решения | Менять предметное знание |
 | `surface` | Курсы, гайды, маршруты | Создавать знание (только потреблять) |

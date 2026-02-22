@@ -224,13 +224,17 @@ T1: Старт  →  T2: Изучение  →  T3: Персонализация
 | **SPF/** | Framework | Создаёшь первый Pack (нужен pack-template/) | [SPF](https://github.com/TserenTserenov/SPF) |
 | **FPF/** | Framework | Нужны первые принципы (редко, для углублённого изучения) | [FPF](https://github.com/TserenTserenov/FPF) |
 | **ZP/** | Foundation | Нулевые принципы (6 универсальных ограничений) | [ZP](https://github.com/TserenTserenov/ZP) |
+| **PACK-digital-platform/** | Pack | Живой пример Pack (40+ сущностей: роли, тиры, архитектура) | [PACK-digital-platform](https://github.com/TserenTserenov/PACK-digital-platform) |
+| **PACK-MIM/** | Pack | Пример Pack поменьше (22 сущности, мастерская) | [PACK-MIM](https://github.com/TserenTserenov/PACK-MIM) |
+| **FMT-s2r/** | Format | Фреймворк для третьих принципов (S2R = System-to-Role) | [FMT-s2r](https://github.com/TserenTserenov/FMT-s2r) |
+| **DS-Knowledge-Index-Tseren/** | Downstream/surface | Пример surface downstream: блог, посты, материалы | [DS-Knowledge-Index-Tseren](https://github.com/TserenTserenov/DS-Knowledge-Index-Tseren) |
 
 ### Опциональные агенты (по мере роста)
 
 | Репо | Агент | Когда добавлять | Ссылка |
 |------|-------|----------------|--------|
-| **DS-extractor-agent/** | Экстрактор знаний | Первый Pack создан, 10+ сущностей. Автоматическое извлечение знаний из сессий | [DS-extractor-agent](https://github.com/TserenTserenov/DS-extractor-agent) |
-| **DS-synchronizer/** | Синхронизатор | 3+ репозитория. Кросс-репо синхронизация, code-scan, автоматические проекции | [DS-synchronizer](https://github.com/TserenTserenov/DS-synchronizer) |
+| **DS-ai-systems/extractor/** | Экстрактор знаний | Первый Pack создан, 10+ сущностей. Автоматическое извлечение знаний из сессий | [DS-ai-systems/extractor](https://github.com/TserenTserenov/DS-ai-systems/tree/main/extractor) |
+| **DS-ai-systems/synchronizer/** | Синхронизатор | 3+ репозитория. Кросс-репо синхронизация, code-scan, автоматические проекции | [DS-ai-systems/synchronizer](https://github.com/TserenTserenov/DS-ai-systems/tree/main/synchronizer) |
 
 > **Принцип:** Начни с минимума (2 репо: FMT-exocortex-template + DS-strategy). Добавляй по мере роста. Не клонируй всё сразу.
 
