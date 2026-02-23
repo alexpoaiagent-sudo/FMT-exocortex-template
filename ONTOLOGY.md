@@ -108,10 +108,10 @@ Level 3: S2R и др. → Downstream      ← фреймворки + принц�
 
 | Компонент | Путь | Назначение |
 |-----------|------|-----------|
-| Runner | `strategist-agent/scripts/strategist.sh` | Запуск Claude CLI с промптом |
-| Промпты | `strategist-agent/prompts/*.md` | 9 сценариев (session-prep, strategy-session, day-plan, day-close, week-review...) |
-| Расписание | `strategist-agent/scripts/launchd/*.plist` | LaunchAgent (утро + воскресенье) |
-| Установщик | `strategist-agent/install.sh` | Копирование plist + загрузка |
+| Runner | `agents/strategist/scripts/strategist.sh` | Запуск Claude CLI с промптом |
+| Промпты | `agents/strategist/prompts/*.md` | 9 сценариев (session-prep, strategy-session, day-plan, day-close, week-review...) |
+| Расписание | `agents/strategist/scripts/launchd/*.plist` | LaunchAgent (утро + воскресенье) |
+| Установщик | `agents/strategist/install.sh` | Копирование plist + загрузка |
 
 ## Стратегический хаб (DS-strategy)
 

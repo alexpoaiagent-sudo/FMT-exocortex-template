@@ -38,4 +38,4 @@
 | Обслуживание CLAUDE.md | `memory/claude-md-maintenance.md` |
 | Урок WP Gate | `memory/wp-gate-lesson.md` |
 | **Системно-специфичное** | **→ repo/CLAUDE.md** |
-| Стратег | `DS-strategist/README.md` |
+| Стратег | `agents/strategist/README.md` (в шаблоне) |

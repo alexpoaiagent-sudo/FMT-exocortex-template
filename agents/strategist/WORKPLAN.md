@@ -1,4 +1,4 @@
-# WORKPLAN: DS-strategist
+# WORKPLAN: Стратег (agents/strategist)
 
 > Рабочие продукты для этого репозитория.
 

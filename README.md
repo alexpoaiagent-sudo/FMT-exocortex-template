@@ -25,7 +25,7 @@
 - Закрываешь сессию — результат зафиксирован, план обновлён
 - В понедельник — Стратег готовит черновик недельного плана, вы обсуждаете его на сессии стратегирования
 
-> **Хочешь понять, что за этим стоит?** Смотри [LEARNING-PATH.md](LEARNING-PATH.md) — полный путь изучения: принципы, протоколы, агенты, Pack, SOTA и где всё найти.
+> **Хочешь понять, что за этим стоит?** Смотри [LEARNING-PATH.md](docs/LEARNING-PATH.md) — полный путь изучения: принципы, протоколы, агенты, Pack, SOTA и где всё найти.
 
 ---
 
@@ -40,11 +40,11 @@
 | GitHub CLI | `gh --version` | macOS: `brew install gh` / Linux: [cli.github.com](https://cli.github.com/) |
 | GitHub аккаунт | `gh auth status` | `gh auth login` |
 | Claude Code | `claude --version` | `npm install -g @anthropic-ai/claude-code` |
-| WakaTime (рекомендуется) | Расширение в VS Code | VS Code → Extensions → «WakaTime» → Install → [API key](https://wakatime.com/settings/api-key) |
+| WakaTime (рекомендуется) | `wakatime-cli --version` | `/setup-wakatime` в Claude Code (автоматически) |
 
-> **WakaTime** автоматически трекает время работы в VS Code: по проектам, языкам, файлам, веткам. Бесплатный план: статистика за 2 недели. Данные используются Стратегом в Week Review (S03) и Morning Check (S42). Подробнее: [wakatime.com](https://wakatime.com).
+> **WakaTime** трекает время работы: по проектам, категориям (AI Coding, Coding, Writing Docs), редакторам. Интеграция включает три уровня: (1) Claude Code hooks — heartbeat при каждом промпте и tool call, (2) VS Code extension — время редактирования файлов, (3) Desktop App — время фокуса окна (чтение ответов, браузер). Бесплатный план: статистика за 2 недели. Данные используются Стратегом в Week Review (S03) и Morning Check (S42). **Настройка:** `/setup-wakatime` в Claude Code. Подробнее: [wakatime.com](https://wakatime.com).
 
-> **Автоматизация Стратега:** на macOS — launchd (устанавливается автоматически). На Linux — настройте cron вручную (`crontab -e`). Без автоматизации всё работает — Стратег запускается вручную: `bash strategist-agent/scripts/strategist.sh morning`
+> **Автоматизация Стратега:** на macOS — launchd (устанавливается автоматически). На Linux — настройте cron вручную (`crontab -e`). Без автоматизации всё работает — Стратег запускается вручную: `bash agents/strategist/scripts/strategist.sh morning`
 
 ### Шаг 1: Запустить установку (~5 мин)
 
@@ -116,7 +116,7 @@ Claude прочитает CLAUDE.md и memory/ и проведёт тебя че
 5. Замените `{{TIMEZONE_HOUR}}` на час запуска стратега в UTC (напр. `4` для 7:00 MSK)
 6. Замените `{{TIMEZONE_DESC}}` на описание времени (напр. `7:00 MSK`)
 7. Замените `{{CLAUDE_PATH}}` на путь к Claude CLI (напр. `/opt/homebrew/bin/claude`)
-8. Установите launchd-агентов: `cd strategist-agent && bash install.sh`
+8. Установите launchd-агентов: `cd agents/strategist && bash install.sh`
 9. Скопируйте `memory/` в `~/.claude/projects/.../memory/`
 10. Скопируйте `CLAUDE.md` в корень рабочей директории
 
@@ -141,6 +141,72 @@ bash update.sh
 
 **Что обновляется (standard):** CLAUDE.md, memory/*.md (кроме MEMORY.md), промпты Стратега.
 **Что НЕ трогается (personal):** MEMORY.md (твои РП), DS-strategy/ (твои планы).
+
+---
+
+## От шаблона к рабочему пространству
+
+### Что происходит при setup.sh
+
+```
+FMT-exocortex-template/                    ~/Github/ (твоё рабочее пространство)
+│                                           │
+├── CLAUDE.md            ──── копия ────→   ├── CLAUDE.md
+├── memory/*.md          ──── копия ────→   ├── ~/.claude/projects/.../memory/
+│   └── MEMORY.md (скелет)                  │   └── MEMORY.md (★ твой, пустой)
+│                                           │
+├── agents/strategist/   ── install.sh ──→  ├── ~/Library/LaunchAgents/ (расписание)
+│                                           │
+├── seed/strategy/       ── создаёт репо ─→ ├── DS-strategy/ (★ отдельный приватный репо)
+│                                           │
+└── (остаётся как fork)                     ├── FMT-exocortex-template/ (НЕ трогать)
+                                            ├── PACK-{область}/ (когда создашь)
+                                            └── DS-{проекты}/ (когда создашь)
+```
+
+> **Ключевое:** `seed/strategy/` — заготовка. При setup она становится **отдельным приватным репозиторием** `DS-strategy/` на GitHub. После setup связь с seed/ разрывается — DS-strategy живёт своей жизнью.
+
+### Что даёт платформа (Standard)
+
+Через шаблон и обновления ты получаешь готовую методологию:
+
+| Компонент | Что это | Как обновляется |
+|-----------|---------|-----------------|
+| **Протоколы** | Open → Work → Close: как начинать, вести и закрывать сессию | `update.sh` |
+| **Память** | 9 файлов: различения, SOTA, чеклисты, навигация | `update.sh` |
+| **Стратег** | 7 сценариев: утренний план, недельный обзор, стратегирование | `update.sh` |
+| **Инструменты** | WakaTime hook, Claude Code skills | `update.sh` |
+| **CLAUDE.md** | Правила для Claude Code: архитектура, процессы, gates | `update.sh` |
+
+### Что накапливается у тебя (Personal)
+
+Твои данные живут отдельно и **никогда не затрагиваются обновлениями**:
+
+| Данные | Где живут | Как растут |
+|--------|-----------|-----------|
+| **Планы** | `DS-strategy/current/` | Стратег создаёт WeekPlan и DayPlan |
+| **Контексты задач** | `DS-strategy/inbox/WP-*.md` | Claude фиксирует прогресс по задачам |
+| **Стратегия** | `DS-strategy/docs/Strategy.md` | Обновляется на стратегических сессиях |
+| **Задачи недели** | `MEMORY.md` | Claude обновляет таблицу РП каждую сессию |
+| **Знания** | `PACK-{область}/` | Экстрактор формализует captures в Pack-сущности |
+| **Проекты** | `DS-{проекты}/` | Ты создаёшь по мере роста |
+
+### Как работают обновления
+
+```
+Платформа (upstream)                     Ты (downstream)
+
+FMT-exocortex-template ──── update.sh ──→ Твой fork (git merge)
+(автор обновляет)              │
+                               ├──→ CLAUDE.md       → ~/Github/CLAUDE.md
+                               ├──→ memory/*.md     → ~/.claude/projects/.../
+                               │    (MEMORY.md НЕ трогается!)
+                               └──→ agents/prompts/ → остаются в fork
+
+DS-strategy/     ← НЕ затрагивается (отдельный репо)
+PACK-{область}/  ← НЕ затрагивается (твой репо)
+MEMORY.md        ← НЕ затрагивается (твои данные)
+```
 
 ---
 
@@ -211,7 +277,7 @@ T1: Старт  →  T2: Изучение  →  T3: Персонализация
 | Репо | Тип | Что это | Откуда |
 |------|-----|---------|--------|
 | **FMT-exocortex-template/** | Format | Твой форк шаблона экзокортекса (источник обновлений, CLAUDE.md, memory/, Стратег) | Fork от [FMT-exocortex-template](https://github.com/TserenTserenov/FMT-exocortex-template) |
-| **DS-strategy/** | Downstream/governance | Стратегический хаб: WeekPlan, DayPlan, inbox, стратегия, неудовлетворённости | Создаётся setup.sh из шаблона `my-strategy/` |
+| **DS-strategy/** | Downstream/governance | Стратегический хаб: WeekPlan, DayPlan, inbox, стратегия, неудовлетворённости | Создаётся setup.sh из шаблона `seed/strategy/` |
 
 ### Создаёшь сам (когда готов)
 
@@ -246,30 +312,58 @@ T1: Старт  →  T2: Изучение  →  T3: Персонализация
 ## Структура
 
 ```
-экзокортекс/
-├── CLAUDE.md                       # Правила для Claude Code (протоколы, архитектура)
-├── LEARNING-PATH.md                # Путь изучения: что знать и где найти
-├── update.sh                       # Обновление из upstream
-├── memory/                         # Оперативная память (8 файлов, ≤100 строк каждый)
-│   ├── MEMORY.md                   # Задачи недели + навигация (авто-загрузка)
-│   ├── fpf-reference.md            # Первые принципы (FPF)
-│   ├── hard-distinctions.md        # Жёсткие различения
-│   ├── checklists.md               # Чеклисты
-│   ├── sota-reference.md           # SOTA-практики
-│   ├── repo-type-rules.md          # Правила по типам репозиториев
-│   ├── claude-md-maintenance.md    # Обслуживание CLAUDE.md
-│   └── wp-gate-lesson.md           # Урок WP Gate
-├── strategist-agent/               # Агент-стратег
-│   ├── prompts/                    # Промпты (session-prep, day-plan, week-review...)
-│   ├── scripts/                    # Скрипты запуска
-│   └── install.sh                  # Установка launchd-агентов
-└── my-strategy/                    # Шаблон стратегического хаба (→ DS-strategy после setup)
-    ├── current/                    # Текущие планы и отчёты
-    ├── archive/                    # Архив
-    ├── inbox/                      # Входящие заметки
-    ├── docs/                       # Стратегия, неудовлетворённости
-    └── exocortex/                  # Backup memory + CLAUDE.md
+FMT-exocortex-template/
+│
+├── CLAUDE.md                        # Правила для Claude Code (протоколы, архитектура)
+├── README.md                        # Быстрый старт (этот файл)
+├── REPO-TYPE.md                     # Тип репозитория (Format)
+├── ONTOLOGY.md                      # Онтология экзокортекса
+├── update.sh                        # Обновление из upstream
+│
+├── memory/                          # Оперативная память (≤10 файлов, ≤100 строк каждый)
+│   ├── MEMORY.md                    # ★ PERSONAL: задачи недели, навигация (авто-загрузка)
+│   ├── protocol-open.md             # Протокол открытия сессии
+│   ├── protocol-work.md             # Протокол работы
+│   ├── protocol-close.md            # Протокол закрытия сессии
+│   ├── navigation.md                # Навигация по репозиториям
+│   ├── hard-distinctions.md         # Жёсткие различения
+│   ├── fpf-reference.md             # Первые принципы (FPF)
+│   ├── checklists.md                # Чеклисты
+│   ├── sota-reference.md            # SOTA-практики
+│   └── repo-type-rules.md           # Правила по типам репозиториев
+│
+├── docs/                            # Справочная документация
+│   └── LEARNING-PATH.md             # Путь изучения: принципы, протоколы, SOTA
+│
+├── agents/                          # Агенты (точка расширения)
+│   └── strategist/                  # Агент-стратег
+│       ├── install.sh               # Установка launchd/cron
+│       ├── prompts/                 # 9 сценариев (day-plan, week-review...)
+│       └── scripts/                 # Скрипты запуска + launchd plist
+│
+├── seed/                            # Шаблоны → отдельные репо после setup
+│   └── strategy/                    # → DS-strategy/ (стратегический хаб)
+│       ├── current/                 # Текущие планы и отчёты
+│       ├── archive/                 # Архив
+│       ├── inbox/                   # Входящие заметки
+│       ├── docs/                    # Стратегия, неудовлетворённости
+│       └── exocortex/              # Backup memory + CLAUDE.md
+│
+└── .claude/                         # Конфигурация Claude Code
+    ├── hooks/wakatime-heartbeat.sh  # WakaTime heartbeat для Claude Code
+    └── skills/setup-wakatime.md     # /setup-wakatime (автонастройка WakaTime)
 ```
+
+### Зоны
+
+| Зона | Что | update.sh | Пользователь |
+|------|-----|-----------|-------------|
+| **PLATFORM** | `memory/*.md` (кроме MEMORY.md), `agents/`, `docs/`, `.claude/` | Обновляет | Не трогает |
+| **PERSONAL** | `memory/MEMORY.md` | Не трогает | Редактирует каждую сессию |
+| **SEED** | `seed/strategy/` | N/A | После setup → отдельный репо DS-strategy/ |
+| **ROOT** | `CLAUDE.md`, `README.md`, `ONTOLOGY.md` | CLAUDE.md обновляет | Читает |
+
+> **Правило:** Platform-space обновляется из upstream (`update.sh`). User-space (MEMORY.md, DS-strategy/) — никогда.
 
 ---
 
@@ -281,7 +375,7 @@ T1: Старт  →  T2: Изучение  →  T3: Персонализация
 4. **WP Gate** — нетривиальная работа начинается с проверки плана. Нет в плане = не делаем
 5. **Open → Work → Close** — каждая сессия: открытие (что делаем) → работа (с фиксацией знаний) → закрытие (результат зафиксирован)
 
-> Подробное описание каждого принципа, протокола и агента — в [LEARNING-PATH.md](LEARNING-PATH.md).
+> Подробное описание каждого принципа, протокола и агента — в [LEARNING-PATH.md](docs/LEARNING-PATH.md).
 
 ---
 

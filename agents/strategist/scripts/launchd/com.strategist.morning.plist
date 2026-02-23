@@ -3,29 +3,27 @@
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.strategist.weekreview</string>
+    <string>com.strategist.morning</string>
 
     <key>ProgramArguments</key>
     <array>
-        <string>{{HOME_DIR}}/Github/DS-strategist/scripts/strategist.sh</string>
-        <string>week-review</string>
+        <string>{{HOME_DIR}}/Github/FMT-exocortex-template/agents/strategist/scripts/strategist.sh</string>
+        <string>morning</string>
     </array>
 
     <key>StartCalendarInterval</key>
     <dict>
-        <key>Weekday</key>
-        <integer>1</integer>
         <key>Hour</key>
-        <integer>0</integer>
+        <integer>{{TIMEZONE_HOUR}}</integer>
         <key>Minute</key>
         <integer>0</integer>
     </dict>
 
     <key>StandardOutPath</key>
-    <string>{{HOME_DIR}}/logs/strategist/launchd-weekreview.log</string>
+    <string>{{HOME_DIR}}/logs/strategist/launchd-morning.log</string>
 
     <key>StandardErrorPath</key>
-    <string>{{HOME_DIR}}/logs/strategist/launchd-weekreview-error.log</string>
+    <string>{{HOME_DIR}}/logs/strategist/launchd-morning-error.log</string>
 
     <key>EnvironmentVariables</key>
     <dict>
@@ -36,6 +34,6 @@
     </dict>
 
     <key>RunAtLoad</key>
-    <false/>
+    <true/>
 </dict>
 </plist>
