@@ -403,6 +403,74 @@ FMT-exocortex-template/
 
 ---
 
+## Команды терминала
+
+Все команды запускаются из обычного терминала (не внутри Claude Code).
+
+### Сессия стратегирования
+
+```bash
+# Провести сессию стратегирования
+# Заметки из "Исчезающие заметки" → черновики + файл сессии → pending-sessions (очередь экстрактора)
+cd ~/Github/creativ-convector && bash начать-сессию.sh
+```
+
+### Экстрактор знаний
+
+```bash
+# Обработать очередь сессий (pending-sessions → captures.md)
+# Запускается автоматически каждые 5 мин через launchd
+bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/session-watcher.sh
+
+# Проверить inbox и предложить распределение по PACK
+# Запускается автоматически каждые 3 часа через launchd
+bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/extractor.sh inbox-check
+
+# Запустить session-import вручную (обработать конкретный файл сессии)
+export SESSION_IMPORT_FILE="/путь/к/файлу/Сессия стратегирования YYYY-MM-DD_HH-MM.md"
+bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/extractor.sh session-import
+```
+
+### Статус агентов launchd
+
+```bash
+# Проверить что все агенты запущены
+launchctl list | grep extractor
+
+# Перезапустить session-watcher
+launchctl unload ~/Library/LaunchAgents/com.extractor.session-watcher.plist
+launchctl load ~/Library/LaunchAgents/com.extractor.session-watcher.plist
+
+# Перезапустить inbox-check
+launchctl unload ~/Library/LaunchAgents/com.extractor.inbox-check.plist
+launchctl load ~/Library/LaunchAgents/com.extractor.inbox-check.plist
+```
+
+### Логи
+
+```bash
+# Посмотреть лог экстрактора за сегодня
+cat ~/logs/extractor/$(date +%Y-%m-%d).log
+
+# Следить за логом в реальном времени
+tail -f ~/logs/extractor/$(date +%Y-%m-%d).log
+```
+
+### Ручное управление captures
+
+```bash
+# Посмотреть что в очереди на обработку
+ls ~/Github/DS-strategy/inbox/pending-sessions/
+
+# Посмотреть что уже обработано
+ls ~/Github/DS-strategy/inbox/processed-sessions/
+
+# Посмотреть текущие captures в inbox
+cat ~/Github/DS-strategy/inbox/captures.md
+```
+
+---
+
 ## FAQ
 
 **Q: Нужна ли подписка Anthropic?**

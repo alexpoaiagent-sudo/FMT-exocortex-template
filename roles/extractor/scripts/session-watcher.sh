@@ -39,6 +39,8 @@ for session_file in "$PENDING_DIR"/*.md; do
     if [ $status -eq 0 ]; then
         mv "$session_file" "$PROCESSED_DIR/$fname"
         log "✅ Готово: $fname → processed-sessions/"
+        # Финальный отчёт цепочки
+        bash "$(dirname "$0")/chain-report.sh" "$PROCESSED_DIR/$fname" | tee -a "$LOG_FILE"
     else
         log "❌ Ошибка обработки: $fname (код $status)"
     fi
