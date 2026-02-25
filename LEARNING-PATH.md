@@ -717,13 +717,13 @@ Telegram-бот — основная точка входа для T1-T3:
 
 | Плейсхолдер | Значение |
 |-------------|----------|
-| `{{WORKSPACE_DIR}}` | Рабочая директория |
-| `{{HOME_DIR}}` | Домашняя директория |
-| `{{GITHUB_USER}}` | GitHub username |
-| `{{CLAUDE_PATH}}` | Путь к Claude CLI |
-| `{{CLAUDE_PROJECT_SLUG}}` | Slug проекта Claude |
-| `{{TIMEZONE_HOUR}}` | UTC час для расписания |
-| `{{TIMEZONE_DESC}}` | Описание таймзоны |
+| `/Users/alexander/Github` | Рабочая директория |
+| `/Users/alexander` | Домашняя директория |
+| `alexpoaiagent-sudo` | GitHub username |
+| `/usr/local/bin/claude` | Путь к Claude CLI |
+| `-Users-alexander-Github` | Slug проекта Claude |
+| `4` | UTC час для расписания |
+| `4:00 UTC` | Описание таймзоны |
 
 ---
 

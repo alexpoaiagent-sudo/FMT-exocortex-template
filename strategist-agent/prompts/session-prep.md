@@ -1,15 +1,15 @@
 Выполни сценарий «Подготовка к сессии стратегирования» для агента Стратег.
 
-Источник сценария: {{WORKSPACE_DIR}}/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/01-strategy-session.md
+Источник сценария: /Users/alexander/Github/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/01-strategy-session.md
 
 ## Контекст
 
-- **HUB (личные планы):** {{WORKSPACE_DIR}}/DS-strategy/current/
-- **Документы стратегии:** {{WORKSPACE_DIR}}/DS-strategy/docs/ (ВСЕ файлы: Strategy.md, Dissatisfactions.md, Session Agenda.md)
-- **Inbox:** {{WORKSPACE_DIR}}/DS-strategy/inbox/ ([fleeting-notes.md](https://github.com/{{GITHUB_USER}}/DS-strategy/blob/main/inbox/fleeting-notes.md) + свежие файлы за неделю)
-- **SPOKE (планы репо):** {{WORKSPACE_DIR}}/*/WORKPLAN.md
-- **Стратегические карты:** {{WORKSPACE_DIR}}/*/MAPSTRATEGIC.md (если есть в репо)
-- **MEMORY:** ~/.claude/projects/{{CLAUDE_PROJECT_SLUG}}/memory/MEMORY.md
+- **HUB (личные планы):** /Users/alexander/Github/DS-strategy/current/
+- **Документы стратегии:** /Users/alexander/Github/DS-strategy/docs/ (ВСЕ файлы: Strategy.md, Dissatisfactions.md, Session Agenda.md)
+- **Inbox:** /Users/alexander/Github/DS-strategy/inbox/ ([fleeting-notes.md](https://github.com/alexpoaiagent-sudo/DS-strategy/blob/main/inbox/fleeting-notes.md) + свежие файлы за неделю)
+- **SPOKE (планы репо):** /Users/alexander/Github/*/WORKPLAN.md
+- **Стратегические карты:** /Users/alexander/Github/*/MAPSTRATEGIC.md (если есть в репо)
+- **MEMORY:** ~/.claude/projects/-Users-alexander-Github/memory/MEMORY.md
 
 ## Именование файлов в current/
 
@@ -64,7 +64,7 @@ DS-strategy/
 #### 4. Сверка со стратегией + агрегация MAPSTRATEGIC (→ блок «Стратегическая сверка»)
 
 - Прочитай `DS-strategy/docs/Strategy.md` — фокусы года, Q1 цели, приоритеты месяца
-- Прочитай `{{WORKSPACE_DIR}}/*/MAPSTRATEGIC.md` (если файл есть в репо)
+- Прочитай `/Users/alexander/Github/*/MAPSTRATEGIC.md` (если файл есть в репо)
 - **Агрегируй** фазы из MAPSTRATEGIC.md → обнови секцию «Текущие фазы (MAPSTRATEGIC)» в Strategy.md
 - Обнови «Приоритеты месяца» — статусы на основе WeekReport
 - Проверь: соответствуют ли текущие РП стратегическому направлению?
@@ -72,7 +72,7 @@ DS-strategy/
 
 #### 5. Обход WORKPLAN.md (Hub-and-Spoke)
 
-- Прочитай `{{WORKSPACE_DIR}}/*/WORKPLAN.md` из каждого репо
+- Прочитай `/Users/alexander/Github/*/WORKPLAN.md` из каждого репо
 - Собери все РП со статусом pending/in-progress
 - Выяви расхождения с HUB-планом
 

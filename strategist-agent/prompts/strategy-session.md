@@ -1,14 +1,14 @@
 Выполни сценарий «Сессия стратегирования» для агента Стратег.
 
-Источник сценария: {{WORKSPACE_DIR}}/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/01-strategy-session.md
+Источник сценария: /Users/alexander/Github/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/01-strategy-session.md
 
 ## Контекст
 
-- **HUB (личные планы):** {{WORKSPACE_DIR}}/DS-strategy/current/
-- **Документы стратегии:** {{WORKSPACE_DIR}}/DS-strategy/docs/ (Strategy.md, Dissatisfactions.md, Session Agenda.md)
-- **Inbox:** {{WORKSPACE_DIR}}/DS-strategy/inbox/
-- **SPOKE (планы репо):** {{WORKSPACE_DIR}}/*/WORKPLAN.md
-- **MEMORY:** ~/.claude/projects/{{CLAUDE_PROJECT_SLUG}}/memory/MEMORY.md
+- **HUB (личные планы):** /Users/alexander/Github/DS-strategy/current/
+- **Документы стратегии:** /Users/alexander/Github/DS-strategy/docs/ (Strategy.md, Dissatisfactions.md, Session Agenda.md)
+- **Inbox:** /Users/alexander/Github/DS-strategy/inbox/
+- **SPOKE (планы репо):** /Users/alexander/Github/*/WORKPLAN.md
+- **MEMORY:** ~/.claude/projects/-Users-alexander-Github/memory/MEMORY.md
 
 ## Предусловие
 

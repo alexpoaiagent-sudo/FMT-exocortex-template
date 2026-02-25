@@ -1,12 +1,12 @@
 Выполни сценарий Day Plan для агента Стратег.
 
-Источник сценария: {{WORKSPACE_DIR}}/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/02-day-plan.md
+Источник сценария: /Users/alexander/Github/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/02-day-plan.md
 
 ## Контекст
 
-- **HUB (личные планы):** {{WORKSPACE_DIR}}/DS-strategy/current/
-- **SPOKE (планы репо):** {{WORKSPACE_DIR}}/*/WORKPLAN.md
-- **MEMORY:** ~/.claude/projects/{{CLAUDE_PROJECT_SLUG}}/memory/MEMORY.md
+- **HUB (личные планы):** /Users/alexander/Github/DS-strategy/current/
+- **SPOKE (планы репо):** /Users/alexander/Github/*/WORKPLAN.md
+- **MEMORY:** ~/.claude/projects/-Users-alexander-Github/memory/MEMORY.md
 
 ## Именование файлов в current/
 
@@ -28,11 +28,11 @@ DS-strategy/
 **Стратег ОБЯЗАН** собрать коммиты за вчерашний день самостоятельно:
 
 ```bash
-# Для КАЖДОГО репо в {{WORKSPACE_DIR}}/:
-git -C {{WORKSPACE_DIR}}/<repo> log --since="yesterday 00:00" --until="today 00:00" --oneline --no-merges
+# Для КАЖДОГО репо в /Users/alexander/Github/:
+git -C /Users/alexander/Github/<repo> log --since="yesterday 00:00" --until="today 00:00" --oneline --no-merges
 ```
 
-- Пройди по ВСЕМ репозиториям в `{{WORKSPACE_DIR}}/`
+- Пройди по ВСЕМ репозиториям в `/Users/alexander/Github/`
 - Сгруппируй коммиты по репозиториям
 - Сопоставь коммиты с РП из недельного плана
 - Определи статус каждого затронутого РП: done / partial / not started

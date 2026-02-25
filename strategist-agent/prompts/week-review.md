@@ -3,23 +3,23 @@
 > **Триггер:** Автоматический — Пн 00:00 (полночь Вс→Пн, launchd).
 > Создаёт WeekReport для клуба. Служит входом для session-prep (Пн 4:00).
 
-Источник сценария: {{WORKSPACE_DIR}}/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/03-week-review.md
+Источник сценария: /Users/alexander/Github/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/scenarios/scheduled/03-week-review.md
 
 ## Контекст
 
-- **WeekPlan:** {{WORKSPACE_DIR}}/DS-strategy/current/WeekPlan W*.md
-- **Шаблон:** {{WORKSPACE_DIR}}/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/templates/reviews/weekly-review.md
+- **WeekPlan:** /Users/alexander/Github/DS-strategy/current/WeekPlan W*.md
+- **Шаблон:** /Users/alexander/Github/PACK-digital-platform/pack/digital-platform/02-domain-entities/DP.AGENT.012-strategist/templates/reviews/weekly-review.md
 
 ## Алгоритм
 
 ### 1. Сбор данных (Стратег собирает сам)
 
 ```bash
-# Для КАЖДОГО репо в {{WORKSPACE_DIR}}/:
-git -C {{WORKSPACE_DIR}}/<repo> log --since="last monday 00:00" --until="today 00:00" --oneline --no-merges
+# Для КАЖДОГО репо в /Users/alexander/Github/:
+git -C /Users/alexander/Github/<repo> log --since="last monday 00:00" --until="today 00:00" --oneline --no-merges
 ```
 
-- Пройди по ВСЕМ репозиториям в `{{WORKSPACE_DIR}}/`
+- Пройди по ВСЕМ репозиториям в `/Users/alexander/Github/`
 - Загрузи текущий WeekPlan из `DS-strategy/current/`
 - Сопоставь коммиты с РП из WeekPlan
 - Определи статус каждого РП: done / partial / not started

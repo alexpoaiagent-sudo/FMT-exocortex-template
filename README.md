@@ -63,7 +63,7 @@ bash setup.sh
 
 1. Проверяет prerequisites (git, gh, claude)
 2. Форкает `FMT-exocortex-template` → ваш GitHub аккаунт
-3. Заменяет 7 плейсхолдеров (`{{GITHUB_USER}}`, `{{WORKSPACE_DIR}}` и др.)
+3. Заменяет 7 плейсхолдеров (`alexpoaiagent-sudo`, `/Users/alexander/Github` и др.)
 4. Копирует `CLAUDE.md` → корень рабочей директории
 5. Копирует `memory/*.md` → `~/.claude/projects/.../memory/`
 6. Устанавливает launchd-агентов для Стратега
@@ -106,13 +106,13 @@ Claude прочитает CLAUDE.md и memory/ и проведёт тебя че
 <details>
 <summary>Ручная настройка (если setup.sh не подходит)</summary>
 
-1. Замените `{{GITHUB_USER}}` на ваш GitHub username во всех файлах
-2. Замените `{{WORKSPACE_DIR}}` на путь к рабочей директории (напр. `~/Github`)
-3. Замените `{{HOME_DIR}}` на домашнюю директорию (значение `$HOME`)
-4. Замените `{{CLAUDE_PROJECT_SLUG}}` на путь через дефисы (напр. для `~/Github` → `-Users-yourname-Github`)
-5. Замените `{{TIMEZONE_HOUR}}` на час запуска стратега в UTC (напр. `4` для 7:00 MSK)
-6. Замените `{{TIMEZONE_DESC}}` на описание времени (напр. `7:00 MSK`)
-7. Замените `{{CLAUDE_PATH}}` на путь к Claude CLI (напр. `/opt/homebrew/bin/claude`)
+1. Замените `alexpoaiagent-sudo` на ваш GitHub username во всех файлах
+2. Замените `/Users/alexander/Github` на путь к рабочей директории (напр. `~/Github`)
+3. Замените `/Users/alexander` на домашнюю директорию (значение `$HOME`)
+4. Замените `-Users-alexander-Github` на путь через дефисы (напр. для `~/Github` → `-Users-yourname-Github`)
+5. Замените `4` на час запуска стратега в UTC (напр. `4` для 7:00 MSK)
+6. Замените `4:00 UTC` на описание времени (напр. `7:00 MSK`)
+7. Замените `/usr/local/bin/claude` на путь к Claude CLI (напр. `/opt/homebrew/bin/claude`)
 8. Установите launchd-агентов: `cd strategist-agent && bash install.sh`
 9. Скопируйте `memory/` в `~/.claude/projects/.../memory/`
 10. Скопируйте `CLAUDE.md` в корень рабочей директории

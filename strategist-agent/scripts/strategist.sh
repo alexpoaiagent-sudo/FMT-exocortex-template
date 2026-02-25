@@ -10,7 +10,7 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 WORKSPACE="$HOME/Github/DS-strategy"
 PROMPTS_DIR="$REPO_DIR/prompts"
 LOG_DIR="$HOME/logs/strategist"
-CLAUDE_PATH="{{CLAUDE_PATH}}"
+CLAUDE_PATH="/usr/local/bin/claude"
 
 # Создаём папку для логов
 mkdir -p "$LOG_DIR"

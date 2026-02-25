@@ -56,8 +56,8 @@ Pack (source-of-truth)          Code (инструмент)              Results
 
 | Время (UTC) | День | Сценарий | Plist |
 |-------------|------|----------|-------|
-| {{TIMEZONE_HOUR}}:00 | Понедельник | `session-prep` (headless) | `com.strategist.morning` |
-| {{TIMEZONE_HOUR}}:00 | Вт-Вс | `day-plan` | `com.strategist.morning` |
+| 4:00 | Понедельник | `session-prep` (headless) | `com.strategist.morning` |
+| 4:00 | Вт-Вс | `day-plan` | `com.strategist.morning` |
 | 00:00 | Понедельник | `week-review` | `com.strategist.weekreview` |
 
 ## Установка
