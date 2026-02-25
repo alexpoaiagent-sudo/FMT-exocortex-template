@@ -12,7 +12,7 @@
 
 | Домен | Pack | Префикс | Путь |
 |-------|------|---------|------|
-| VK Coffee, кофейня, кухня, бариста, меню, цены, сотрудники | VK-offee | VK | /Users/alexander/Github/VK-offee/knowledge-base/ |
+| VK Coffee, кофейня, кухня, бариста, меню, рецепты, стандарты, смена, касса, роли, чек-листы | PACK-cafe-operations | CO | /Users/alexander/Github/VK-offee/PACK-cafe-operations/ |
 
 ## 2. Директории по типу знания
 
