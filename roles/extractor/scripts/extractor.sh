@@ -166,6 +166,12 @@ case "$1" in
         run_claude "session-close"
         ;;
 
+    "session-import")
+        log "Running session-import extraction"
+        run_claude "session-import"
+        notify_telegram "session-import"
+        ;;
+
     "on-demand")
         log "Running on-demand extraction"
         run_claude "on-demand"
