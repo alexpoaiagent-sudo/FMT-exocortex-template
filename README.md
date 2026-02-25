@@ -406,42 +406,76 @@ FMT-exocortex-template/
 ## Команды терминала
 
 Все команды запускаются из обычного терминала (не внутри Claude Code).
+Если нужно запустить из Claude Code — используй `claude-run.sh` (снимает блокировку вложенных сессий).
+
+---
+
+### Как работает цепочка стратегирования
+
+```
+Obsidian "Исчезающие заметки"
+    ↓ начать-сессию.sh
+creativ-convector: заметки → черновики + файл сессии
+    ↓ автоматически
+DS-strategy/inbox/pending-sessions/   ← файл сессии в очереди
+    ↓ session-watcher (каждые 5 мин, launchd)
+DS-strategy/inbox/captures.md         ← знания VK Coffee извлечены
+    ↓ inbox-check (каждые 3 часа, launchd)
+DS-strategy/inbox/extraction-reports/ ← отчёт: что принято, куда
+    ↓ ты одобряешь
+PACK-cafe-operations/                  ← знания записаны в базу
+```
+
+---
 
 ### Сессия стратегирования
 
 ```bash
 # Провести сессию стратегирования
-# Заметки из "Исчезающие заметки" → черновики + файл сессии → pending-sessions (очередь экстрактора)
+# Заметки → черновики + файл сессии → очередь экстрактора + отчёт цепочки
 cd ~/Github/creativ-convector && bash начать-сессию.sh
 ```
 
 ### Экстрактор знаний
 
 ```bash
-# Обработать очередь сессий (pending-sessions → captures.md)
-# Запускается автоматически каждые 5 мин через launchd
+# Запустить из Claude Code (снимает блокировку вложенных сессий)
+bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/claude-run.sh inbox-check
+bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/claude-run.sh session-watcher
+
+# Запустить напрямую из обычного терминала
+bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/extractor.sh inbox-check
 bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/session-watcher.sh
 
-# Проверить inbox и предложить распределение по PACK
-# Запускается автоматически каждые 3 часа через launchd
-bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/extractor.sh inbox-check
-
-# Запустить session-import вручную (обработать конкретный файл сессии)
-export SESSION_IMPORT_FILE="/путь/к/файлу/Сессия стратегирования YYYY-MM-DD_HH-MM.md"
+# Запустить session-import для конкретного файла сессии
+export SESSION_IMPORT_FILE="/путь/к/Сессия стратегирования YYYY-MM-DD_HH-MM.md"
 bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/extractor.sh session-import
+```
+
+### Отчёт цепочки
+
+```bash
+# Посмотреть финальный отчёт по цепочке (создаётся автоматически после session-watcher)
+cat ~/Github/DS-strategy/inbox/extraction-reports/$(date +%Y-%m-%d)-chain-report.md
+
+# Запустить отчёт вручную
+bash ~/Github/FMT-exocortex-template/roles/extractor/scripts/chain-report.sh
+
+# Посмотреть все отчёты
+ls ~/Github/DS-strategy/inbox/extraction-reports/
 ```
 
 ### Статус агентов launchd
 
 ```bash
-# Проверить что все агенты запущены
+# Проверить что все агенты запущены (должны быть session-watcher и inbox-check)
 launchctl list | grep extractor
 
-# Перезапустить session-watcher
+# Перезапустить session-watcher (обрабатывает очередь каждые 5 мин)
 launchctl unload ~/Library/LaunchAgents/com.extractor.session-watcher.plist
 launchctl load ~/Library/LaunchAgents/com.extractor.session-watcher.plist
 
-# Перезапустить inbox-check
+# Перезапустить inbox-check (проверяет captures каждые 3 часа)
 launchctl unload ~/Library/LaunchAgents/com.extractor.inbox-check.plist
 launchctl load ~/Library/LaunchAgents/com.extractor.inbox-check.plist
 ```
