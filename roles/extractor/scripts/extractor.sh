@@ -177,6 +177,12 @@ case "$1" in
         run_claude "on-demand"
         ;;
 
+    "archive-review")
+        log "Running archive-review"
+        run_claude "archive-review"
+        notify_telegram "archive-review"
+        ;;
+
     *)
         echo "Knowledge Extractor (R2)"
         echo ""
@@ -187,6 +193,7 @@ case "$1" in
         echo "  audit          Аудит Pack'ов"
         echo "  session-close  Экстракция при закрытии сессии"
         echo "  on-demand      Экстракция по запросу"
+    echo "  archive-review Переобработка архива (раз в месяц)"
         exit 1
         ;;
 esac

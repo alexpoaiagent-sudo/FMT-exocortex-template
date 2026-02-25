@@ -140,6 +140,13 @@ remaining: M
 **Было:** `### Паттерн X`
 **Стало:** `### Паттерн X [processed 2026-02-12]`
 
+### Шаг 4b: Rejected captures → Archive
+
+Для каждого capture с вердиктом `reject`:
+1. Создай файл в `/Users/alexander/Github/DS-strategy/inbox/archive/rejected/` с именем `CO.reject.{NNN}-{slug}.md`
+2. Frontmatter: `id`, `type: capture`, `status: rejected`, `reason`, `date`, `source`, `tags`
+3. Добавь запись в `/Users/alexander/Github/DS-strategy/inbox/archive/index.md` (новая строка в таблице Реестр)
+
 ### Шаг 5: Закоммитить
 
 1. Закоммить extraction report (новый)

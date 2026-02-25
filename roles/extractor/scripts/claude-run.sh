@@ -30,7 +30,7 @@ if [ -z "$1" ]; then
 fi
 
 case "$1" in
-    "inbox-check"|"session-import"|"on-demand"|"session-close")
+    "inbox-check"|"session-import"|"on-demand"|"session-close"|"archive-review")
         log "Запуск: $1"
         bash "$EXTRACTOR" "$1"
         status=$?
