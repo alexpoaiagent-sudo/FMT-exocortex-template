@@ -13,11 +13,11 @@ set -e
 # Конфигурация
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
-WORKSPACE="{{WORKSPACE_DIR}}"
+WORKSPACE="/Users/alexander/Github"
 PROMPTS_DIR="$REPO_DIR/prompts"
-LOG_DIR="{{HOME_DIR}}/logs/extractor"
-CLAUDE_PATH="{{CLAUDE_PATH}}"
-ENV_FILE="{{HOME_DIR}}/.config/aist/env"
+LOG_DIR="/Users/alexander/logs/extractor"
+CLAUDE_PATH="/opt/homebrew/bin/claude"
+ENV_FILE="/Users/alexander/.config/aist/env"
 
 # Создаём папку для логов
 mkdir -p "$LOG_DIR"

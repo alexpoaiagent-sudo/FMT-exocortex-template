@@ -12,11 +12,7 @@
 
 | Домен | Pack | Префикс | Путь |
 |-------|------|---------|------|
-| _Твой домен (напр. Machine Learning)_ | _PACK-my-domain_ | _MD_ | _{{WORKSPACE_DIR}}/PACK-my-domain/pack/my-domain/_ |
-
-<!-- Удали пример выше и добавь свои Pack'и. Формат:
-| Домен (ключевые слова) | Имя Pack-репо | Короткий префикс (2-3 буквы) | Путь к pack/ директории |
--->
+| VK Coffee, кофейня, кухня, бариста, меню, цены, сотрудники | VK-offee | VK | /Users/alexander/Github/VK-offee/knowledge-base/ |
 
 ## 2. Директории по типу знания
 
