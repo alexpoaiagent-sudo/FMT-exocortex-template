@@ -35,7 +35,6 @@
 | Правила по типам репо | `memory/repo-type-rules.md` |
 | Чеклисты | `memory/checklists.md` |
 | **SOTA-практики** | `memory/sota-reference.md` |
-| Обслуживание CLAUDE.md | `memory/claude-md-maintenance.md` |
-| Урок WP Gate | `memory/wp-gate-lesson.md` |
+| Протокол работы | `memory/protocol-work.md` |
 | **Системно-специфичное** | **→ repo/CLAUDE.md** |
-| Стратег | `DS-strategist/README.md` |
+| Стратег | `roles/strategist/README.md` (в шаблоне) |
