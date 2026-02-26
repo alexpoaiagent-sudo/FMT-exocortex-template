@@ -16,7 +16,7 @@ STATE_DIR="$HOME/.local/state/exocortex"
 LOG_DIR="$HOME/logs/synchronizer"
 LOG_FILE="$LOG_DIR/scheduler-$(date +%Y-%m-%d).log"
 
-ROLES_DIR="{{WORKSPACE_DIR}}/FMT-exocortex-template/roles"
+ROLES_DIR="$HOME/Github/FMT-exocortex-template/roles"
 STRATEGIST_SH="$ROLES_DIR/strategist/scripts/strategist.sh"
 EXTRACTOR_SH="$ROLES_DIR/extractor/scripts/extractor.sh"
 NOTIFY_SH="$SCRIPT_DIR/notify.sh"
