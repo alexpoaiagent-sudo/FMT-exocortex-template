@@ -12,6 +12,14 @@ PROMPTS_DIR="$REPO_DIR/prompts"
 LOG_DIR="$HOME/logs/strategist"
 CLAUDE_PATH="/usr/local/bin/claude"
 
+# AI CLI: переопределение через переменные окружения
+# По умолчанию: Claude Code. Примеры:
+#   AI_CLI=codex AI_CLI_PROMPT_FLAG=--prompt bash strategist.sh morning
+#   AI_CLI=aider AI_CLI_PROMPT_FLAG=--message AI_CLI_EXTRA_FLAGS="" bash strategist.sh morning
+AI_CLI="${AI_CLI:-$CLAUDE_PATH}"
+AI_CLI_PROMPT_FLAG="${AI_CLI_PROMPT_FLAG:--p}"
+AI_CLI_EXTRA_FLAGS="${AI_CLI_EXTRA_FLAGS:---dangerously-skip-permissions --allowedTools Read,Write,Edit,Glob,Grep,Bash}"
+
 # Создаём папку для логов
 mkdir -p "$LOG_DIR"
 
@@ -80,10 +88,9 @@ run_claude() {
 
     cd "$WORKSPACE"
 
-    # Запуск Claude Code с содержимым команды как промпт
-    "$CLAUDE_PATH" --dangerously-skip-permissions \
-        --allowedTools "Read,Write,Edit,Glob,Grep,Bash" \
-        -p "$prompt" \
+    # Запуск AI CLI с содержимым команды как промпт
+    "$AI_CLI" $AI_CLI_EXTRA_FLAGS \
+        $AI_CLI_PROMPT_FLAG "$prompt" \
         >> "$LOG_FILE" 2>&1
 
     log "Completed scenario: $command_file"
@@ -113,6 +120,21 @@ already_ran_today() {
     [ -f "$LOG_FILE" ] && grep -q "Completed scenario: $scenario" "$LOG_FILE"
 }
 
+# File-based lock to prevent concurrent execution (RunAtLoad + CalendarInterval race)
+LOCK_DIR="$LOG_DIR/locks"
+mkdir -p "$LOCK_DIR"
+
+acquire_lock() {
+    local scenario="$1"
+    local lockfile="$LOCK_DIR/${scenario}.${DATE}.lock"
+    if ! mkdir "$lockfile" 2>/dev/null; then
+        log "SKIP: $scenario already running (lock exists: $lockfile)"
+        exit 0
+    fi
+    # Auto-cleanup lock on exit
+    trap "rmdir '$lockfile' 2>/dev/null" EXIT
+}
+
 # Определяем какой сценарий запускать
 case "$1" in
     "morning")
@@ -123,7 +145,8 @@ case "$1" in
             SCENARIO="day-plan"
         fi
 
-        # Защита от повторного запуска (RunAtLoad + CalendarInterval)
+        # Защита от повторного запуска (RunAtLoad + CalendarInterval race condition)
+        acquire_lock "$SCENARIO"
         if already_ran_today "$SCENARIO"; then
             log "SKIP: $SCENARIO already completed today"
             exit 0
@@ -167,6 +190,7 @@ case "$1" in
         notify_telegram "day-plan"
         ;;
     "note-review")
+        acquire_lock "note-review"
         log "Evening: running note review"
         # Canary: count bold notes before
         FLEETING="$WORKSPACE/inbox/fleeting-notes.md"
@@ -177,15 +201,36 @@ case "$1" in
 
         # Canary: count bold notes after — if same or more, Step 10 likely failed
         BOLD_AFTER=$(grep -c '^\*\*' "$FLEETING" 2>/dev/null || echo 0)
-        log "Canary: $BOLD_AFTER bold notes after note-review (was $BOLD_BEFORE)"
+        log "Canary: $BOLD_AFTER"
+        NON_BOLD=$(grep -c '^[^*#>-]' "$FLEETING" 2>/dev/null || echo 0)
+        log "Non-bold content lines: $NON_BOLD"
         if [ "$BOLD_AFTER" -ge "$BOLD_BEFORE" ] && [ "$BOLD_BEFORE" -gt 0 ]; then
             log "WARN: Note-Review Step 10 may have failed — bold notes did not decrease ($BOLD_BEFORE → $BOLD_AFTER)"
-            # Direct TG alert (bypass notify.sh templates)
+        fi
+
+        # Deterministic cleanup: archive non-bold, non-🔄 notes (safety net for LLM Step 10)
+        log "Running deterministic cleanup..."
+        CLEANUP_OUTPUT=$(bash "$SCRIPT_DIR/cleanup-processed-notes.sh" 2>&1) || true
+        log "Cleanup: $CLEANUP_OUTPUT"
+
+        # If cleanup made changes, commit and push
+        if ! git -C "$WORKSPACE" diff --quiet -- inbox/fleeting-notes.md archive/notes/Notes-Archive.md 2>/dev/null; then
+            git -C "$WORKSPACE" add inbox/fleeting-notes.md archive/notes/Notes-Archive.md
+            git -C "$WORKSPACE" commit -m "chore: auto-cleanup processed notes from fleeting-notes.md" >> "$LOG_FILE" 2>&1 || true
+            git -C "$WORKSPACE" pull --rebase >> "$LOG_FILE" 2>&1 && log "Cleanup: pulled (rebase)" || log "WARN: cleanup pull --rebase failed"
+            git -C "$WORKSPACE" push >> "$LOG_FILE" 2>&1 && log "Cleanup: pushed" || log "WARN: cleanup push failed"
+        else
+            log "Cleanup: no changes to commit"
+        fi
+
+        # Alert if LLM failed AND cleanup was needed
+        if [ "$BOLD_AFTER" -ge "$BOLD_BEFORE" ] && [ "$BOLD_BEFORE" -gt 0 ]; then
             ENV_FILE="$HOME/.config/aist/env"
             if [ -f "$ENV_FILE" ]; then
                 set -a; source "$ENV_FILE"; set +a
-                ALERT_TEXT="⚠️ <b>Note-Review canary</b>: Step 10 не сработал ($BOLD_BEFORE → $BOLD_AFTER bold notes). Проверь логи: ~/logs/strategist/"
-                ALERT_JSON=$(printf '%s' "$ALERT_TEXT" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')
+                ALERT_TEXT="⚠️ <b>Note-Review canary</b>: Step 10 не сработал ($BOLD_BEFORE → $BOLD_AFTER bold). Deterministic cleanup applied."
+                ALERT_JSON=$(printf '%s' "$ALERT_TEXT" | sed 's/\\/\\\\/g; s/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+                ALERT_JSON="\"${ALERT_JSON}\""
                 curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
                     -H "Content-Type: application/json" \
                     -d "{\"chat_id\":\"${TELEGRAM_CHAT_ID}\",\"text\":${ALERT_JSON},\"parse_mode\":\"HTML\"}" >> "$LOG_FILE" 2>&1 || true

@@ -16,10 +16,24 @@ STATE_DIR="$HOME/.local/state/exocortex"
 LOG_DIR="$HOME/logs/synchronizer"
 LOG_FILE="$LOG_DIR/scheduler-$(date +%Y-%m-%d).log"
 
-ROLES_DIR="$HOME/Github/FMT-exocortex-template/roles"
-STRATEGIST_SH="$ROLES_DIR/strategist/scripts/strategist.sh"
-EXTRACTOR_SH="$ROLES_DIR/extractor/scripts/extractor.sh"
+ROLES_DIR="{{WORKSPACE_DIR}}/FMT-exocortex-template/roles"
 NOTIFY_SH="$SCRIPT_DIR/notify.sh"
+
+# Role runner discovery: reads runner path from role.yaml, fallback to convention
+get_role_runner() {
+    local role="$1"
+    local yaml="$ROLES_DIR/$role/role.yaml"
+    if [ -f "$yaml" ]; then
+        local runner
+        runner=$(grep '^runner:' "$yaml" | sed 's/runner: *//' | tr -d '"' | tr -d "'")
+        [ -n "$runner" ] && echo "$ROLES_DIR/$role/$runner" && return
+    fi
+    # Fallback: convention-based path
+    echo "$ROLES_DIR/$role/scripts/$role.sh"
+}
+
+STRATEGIST_SH="$(get_role_runner strategist)"
+EXTRACTOR_SH="$(get_role_runner extractor)"
 
 # Текущее время
 HOUR=$(date +%H)
@@ -73,11 +87,45 @@ cleanup_state() {
     find "$STATE_DIR" -name "*-202*" -mtime +7 -delete 2>/dev/null || true
 }
 
+# === Pre-archive: мгновенная очистка вчерашнего DayPlan (< 1 сек) ===
+# Разделяет архивацию (мгновенно) и генерацию (15+ мин Claude Code).
+# Гарантирует: даже если генерация ещё не началась, старый план не висит в current/.
+pre_archive_dayplan() {
+    local strategy_dir="$HOME/Github/DS-strategy"
+    local archive_dir="$strategy_dir/archive/day-plans"
+    local moved=0
+
+    mkdir -p "$archive_dir"
+
+    for dayplan in "$strategy_dir/current"/DayPlan\ 20*.md; do
+        [ -f "$dayplan" ] || continue
+        local fname
+        fname=$(basename "$dayplan")
+        # Пропускаем сегодняшний план
+        if [[ "$fname" == *"$DATE"* ]]; then continue; fi
+        # Архивируем вчерашний (и любой более старый)
+        git -C "$strategy_dir" mv "$dayplan" "$archive_dir/" 2>/dev/null || mv "$dayplan" "$archive_dir/"
+        moved=$((moved + 1))
+        log "pre-archive: moved $fname → archive/day-plans/"
+    done
+
+    if [ "$moved" -gt 0 ]; then
+        git -C "$strategy_dir" pull --rebase 2>/dev/null || true
+        git -C "$strategy_dir" add current/ archive/day-plans/ 2>/dev/null || true
+        git -C "$strategy_dir" commit -m "chore: archive $moved old DayPlan(s)" 2>/dev/null || true
+        git -C "$strategy_dir" push 2>/dev/null || true
+        log "pre-archive: committed and pushed ($moved file(s))"
+    fi
+}
+
 # === Диспетчер ===
 
 dispatch() {
     log "dispatch started (hour=$HOUR, dow=$DOW)"
     local ran=0
+
+    # --- Pre-archive: убрать вчерашний DayPlan ДО генерации нового ---
+    pre_archive_dayplan
 
     # --- Стратег: week-review (Пн, до morning) ---
     if [ "$DOW" = "1" ] && ! ran_this_week "strategist-week-review"; then

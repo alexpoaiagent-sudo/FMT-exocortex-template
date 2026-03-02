@@ -8,12 +8,13 @@
 
 ## Что ты получишь
 
-После установки у тебя будет работающая система из 4 компонентов:
+После установки у тебя будет работающая система из 5 компонентов:
 
 | Компонент | Что делает |
 |-----------|-----------|
 | **CLAUDE.md** | Правила для Claude Code: как открывать сессию, как фиксировать знания, как закрывать. Claude помнит контекст между сессиями |
 | **memory/** | Оперативная память: текущие задачи, различения, чеклисты, SOTA-практики. Claude читает их в начале каждой сессии |
+| **MCP-серверы** | Доступ к базе знаний платформы: ~5400 документов, образовательные руководства, цифровой двойник. Claude ищет ответы в базе, а не угадывает |
 | **Стратег** | Роль (R1), запускается автоматически: утренний план дня, вечернее ревью, недельная сессия стратегирования |
 | **DS-strategy/** | Твой стратегический хаб: планы недель, отчёты, неудовлетворённости, входящие заметки |
 
@@ -36,18 +37,46 @@
 
 ### Требования
 
-| Инструмент | Проверить | Установить |
-|-----------|-----------|-----------|
-| **ОС** | macOS, Linux или Windows (WSL) | macOS: launchd (авто). Linux: cron. Windows: WSL + cron |
-| Git | `git --version` | macOS: `xcode-select --install` / Linux: `sudo apt install git` / Windows: WSL |
-| GitHub CLI | `gh --version` | macOS: `brew install gh` / Linux: [cli.github.com](https://cli.github.com/) |
-| GitHub аккаунт | `gh auth status` | `gh auth login` |
-| Claude Code | `claude --version` | `npm install -g @anthropic-ai/claude-code` |
-| WakaTime (рекомендуется) | `wakatime-cli --version` | `/setup-wakatime` в Claude Code (автоматически) |
+Два режима установки: **core** (минимальный, офлайн) и **full** (полный, с автоматизацией).
 
-> **WakaTime** трекает время работы: по проектам, категориям (AI Coding, Coding, Writing Docs), редакторам. Интеграция включает три уровня: (1) Claude Code hooks — heartbeat при каждом промпте и tool call, (2) VS Code extension — время редактирования файлов, (3) Desktop App — время фокуса окна (чтение ответов, браузер). Бесплатный план: статистика за 2 недели. Данные используются Стратегом в Week Review (S03) и Morning Check (S42). **Настройка:** `/setup-wakatime` в Claude Code. Подробнее: [wakatime.com](https://wakatime.com).
+| Инструмент | Core | Full | Проверить | Установить |
+|-----------|:----:|:----:|-----------|-----------|
+| **ОС** | ✓ | ✓ | macOS, Linux, Windows (WSL) | — |
+| **Git** | ✓ | ✓ | `git --version` | macOS: `xcode-select --install` / Linux: `sudo apt install git` |
+| **AI CLI** | ✓ | ✓ | Любой: Claude Code, Codex, Aider и др. | См. таблицу совместимости ниже |
+| **VS Code** | ✓ | ✓ | `code --version` | [code.visualstudio.com](https://code.visualstudio.com) |
+| GitHub CLI | — | ✓ | `gh --version` | macOS: `brew install gh` / Linux: [cli.github.com](https://cli.github.com/) |
+| GitHub аккаунт | — | ✓ | `gh auth status` | `gh auth login` |
+| Node.js | — | ✓ | `node --version` | Только если AI CLI = Claude Code |
+| WakaTime | — | — | `wakatime-cli --version` | Опционально. `/setup-wakatime` в Claude Code |
 
-> **Автоматизация Стратега:** на macOS — launchd (устанавливается автоматически). На Linux — настройте cron вручную (`crontab -e`). Без автоматизации всё работает — Стратег запускается вручную: `bash roles/strategist/scripts/strategist.sh morning`
+### Совместимость с AI CLI
+
+Ядро экзокортекса (CLAUDE.md, memory/, промпты) — это markdown-файлы. Они работают с **любым** AI CLI, который умеет читать файлы в рабочей директории.
+
+| AI CLI | Интерактивная работа | Автоматизация (Стратег) | MCP-серверы | Примечание |
+|--------|:-------------------:|:----------------------:|:-----------:|------------|
+| **Claude Code** (рекомендуемый) | Полная | Полная | Да | Hooks, skills, settings. `npm install -g @anthropic-ai/claude-code` |
+| **Codex** (OpenAI) | Работает | Через `AI_CLI=codex` | Нет | `npm install -g @openai/codex` |
+| **Aider** | Работает | Через `AI_CLI=aider` | Нет | `pip install aider-chat`. Флаг: `AI_CLI_PROMPT_FLAG=--message` |
+| **Continue.dev** | Работает | Нет | Частично | VS Code extension. Нет CLI для автоматизации |
+| **Cursor** | Работает | Нет | Нет | Встроенный AI. Читает CLAUDE.md как project rules |
+
+> **Как переключить AI CLI для автоматизации Стратега:**
+> ```bash
+> # По умолчанию — Claude Code (ничего менять не нужно)
+> bash roles/strategist/scripts/strategist.sh morning
+>
+> # Codex
+> AI_CLI=codex AI_CLI_PROMPT_FLAG=-p AI_CLI_EXTRA_FLAGS="" bash roles/strategist/scripts/strategist.sh morning
+>
+> # Aider
+> AI_CLI=aider AI_CLI_PROMPT_FLAG=--message AI_CLI_EXTRA_FLAGS="" bash roles/strategist/scripts/strategist.sh morning
+> ```
+
+> **WakaTime** трекает время работы: по проектам, категориям (AI Coding, Coding, Writing Docs), редакторам. Бесплатный план: статистика за 2 недели. Данные используются Стратегом в Week Review и Morning Check. **Настройка:** `/setup-wakatime` в Claude Code. Подробнее: [wakatime.com](https://wakatime.com).
+
+> **Автоматизация Стратега:** на macOS — launchd (устанавливается автоматически при полной установке). На Linux — настройте cron вручную (`crontab -e`). Без автоматизации всё работает — Стратег запускается вручную: `bash roles/strategist/scripts/strategist.sh morning`
 
 ### Шаг 0: Создать рабочую папку
 
@@ -59,31 +88,40 @@ mkdir -p ~/Github
 
 > **Важно:** Эта папка — ваше рабочее пространство. В неё будут клонироваться все репозитории: `FMT-exocortex-template/`, `DS-strategy/`, `PACK-{область}/`, `DS-{проекты}/` и др. CLAUDE.md тоже будет лежать в корне этой папки. Название может быть любым (не обязательно `Github`), но все репо должны быть в одном месте — Claude Code ориентируется на эту структуру.
 
-### Шаг 1: Запустить установку (~5 мин)
+### Шаг 1: Клонировать и запустить установку
+
+**Вариант A: Полная установка (~5 мин)** — git + GitHub + Claude Code + автоматизация Стратега:
 
 ```bash
-cd ~/Github    # или ваша рабочая директория из Шага 0
-gh repo clone TserenTserenov/DS-ai-systems -- --depth 1
-cd DS-ai-systems/setup
+cd ~/Github
+gh repo fork TserenTserenov/FMT-exocortex-template --clone --remote
+cd FMT-exocortex-template
 bash setup.sh
 ```
 
+**Вариант B: Минимальная установка (~2 мин)** — только git, без сети, любой AI CLI:
+
+```bash
+cd ~/Github
+git clone https://github.com/TserenTserenov/FMT-exocortex-template.git
+cd FMT-exocortex-template
+bash setup.sh --core
+```
+
 Скрипт спросит:
-- GitHub username
-- Рабочую директорию (по умолчанию `~/Github` — укажите путь из Шага 0)
-- Путь к Claude CLI (определяется автоматически)
-- Часовой пояс для Стратега (UTC)
+- GitHub username (можно пропустить в core-режиме)
+- Рабочую директорию (по умолчанию — родительская папка шаблона)
+- Путь к Claude CLI и часовой пояс (только в полном режиме)
 
 <details>
 <summary>Что делает setup.sh</summary>
 
 1. Проверяет prerequisites (git, gh, claude)
-2. Форкает `FMT-exocortex-template` → ваш GitHub аккаунт
-3. Заменяет 7 плейсхолдеров (`{{GITHUB_USER}}`, `{{WORKSPACE_DIR}}` и др.)
-4. Копирует `CLAUDE.md` → корень рабочей директории
-5. Копирует `memory/*.md` → `~/.claude/projects/.../memory/`
-6. Устанавливает launchd-агентов для Стратега
-7. Создаёт `DS-strategy/` — приватный репозиторий для стратегирования
+2. Заменяет 7 плейсхолдеров (`{{GITHUB_USER}}`, `{{WORKSPACE_DIR}}` и др.)
+3. Копирует `CLAUDE.md` → корень рабочей директории
+4. Копирует `memory/*.md` → `~/.claude/projects/.../memory/`
+5. Устанавливает launchd-агентов для Стратега
+6. Создаёт `DS-strategy/` — приватный репозиторий для стратегирования
 
 Посмотреть без выполнения: `bash setup.sh --dry-run`
 </details>
@@ -187,7 +225,8 @@ FMT-exocortex-template/                    ~/Github/ (твоё рабочее п
 |-----------|---------|-----------------|
 | **Протоколы** | Open → Work → Close: как начинать, вести и закрывать сессию | `update.sh` |
 | **Память** | 9 файлов: различения, SOTA, чеклисты, навигация | `update.sh` |
-| **Стратег** | 7 сценариев: утренний план, недельный обзор, стратегирование | `update.sh` |
+| **MCP-серверы** | 2 сервера знаний: knowledge-mcp (Pack + guides + DS), ddt (цифровой двойник) | `update.sh` (конфиг) |
+| **Стратег** | 9 сценариев: утренний план, недельный обзор, стратегирование и др. | `update.sh` |
 | **Инструменты** | WakaTime hook, Claude Code skills | `update.sh` |
 | **CLAUDE.md** | Правила для Claude Code: архитектура, процессы, gates | `update.sh` |
 
@@ -374,6 +413,7 @@ FMT-exocortex-template/
 │       └── exocortex/              # Backup memory + CLAUDE.md
 │
 └── .claude/                         # Конфигурация Claude Code
+    ├── settings.local.json          # MCP-серверы + разрешения (авто-подключение к платформе)
     ├── hooks/wakatime-heartbeat.sh  # WakaTime heartbeat для Claude Code
     └── skills/setup-wakatime.md     # /setup-wakatime (автонастройка WakaTime)
 ```
@@ -398,6 +438,7 @@ FMT-exocortex-template/
 3. **Capture-to-Pack** — знания фиксируются по ходу работы, не теряются
 4. **WP Gate** — нетривиальная работа начинается с проверки плана. Нет в плане = не делаем
 5. **Open → Work → Close** — каждая сессия: открытие (что делаем) → работа (с фиксацией знаний) → закрытие (результат зафиксирован)
+6. **Безопасность по дизайну** — секреты вне git, per-user изоляция, приватные репозитории, CLI permission whitelist. Подробнее: [LEARNING-PATH.md § 8.5](docs/LEARNING-PATH.md)
 
 > Подробное описание каждого принципа, протокола и агента — в [LEARNING-PATH.md](docs/LEARNING-PATH.md).
 
@@ -508,7 +549,7 @@ cat ~/Github/DS-strategy/inbox/captures.md
 ## FAQ
 
 **Q: Нужна ли подписка Anthropic?**
-A: Да. Рекомендуется начать с **Claude Pro** ($20/мес). Если получите значительный эффект от работы с Claude Code и упрётесь в лимиты — переходите на **Claude Max** (~$100/мес) для работы без ограничений. Стратег использует Claude Code для генерации планов.
+A: Для полной установки (Claude Code) — да, рекомендуется **Claude Pro** ($20/мес). Для минимальной установки (`setup.sh --core`) — нет, работает с любым AI CLI (Codex, Aider, Continue.dev и др.). Ядро экзокортекса — это markdown-файлы, совместимые с любой LLM. Подробнее: таблица совместимости AI CLI выше.
 
 **Q: Работает ли на Linux/Windows?**
 A: Да. Ядро (CLAUDE.md + memory/ + Claude Code) работает на любой ОС. Автоматизация Стратега: macOS — launchd (автоматически), Linux — cron (настроить вручную), Windows — через WSL + cron. Без автоматизации Стратег запускается вручную.
@@ -517,13 +558,19 @@ A: Да. Ядро (CLAUDE.md + memory/ + Claude Code) работает на лю
 A: Можно не устанавливать launchd-агентов. CLAUDE.md и memory/ будут работать и без них — просто не будет автоматических планов.
 
 **Q: Как связан бот (@aist_me_bot) и экзокортекс?**
-A: Бот работает на тирах T1-T3 (без git). Экзокортекс (этот шаблон) — для T4+. Они используют одну базу знаний, но экзокортекс даёт больше: Claude Code, Стратег, свои Pack.
+A: Бот работает на тирах T1-T3 (без git). Экзокортекс (этот шаблон) — для T4+. Они используют одну базу знаний (через те же MCP-серверы), но экзокортекс даёт больше: Claude Code, Стратег, свои Pack.
+
+**Q: Что такое MCP и как проверить подключение?**
+A: MCP (Model Context Protocol) — протокол, через который Claude Code получает доступ к базе знаний платформы. Подключение настроено автоматически в `.claude/settings.local.json`. Проверить: откройте Claude Code в папке экзокортекса и попросите `knowledge-mcp search("принципы")` — должен вернуть документы из базы знаний.
 
 **Q: Что такое Pack?**
 A: Pack — это формализованная область знаний (паспорт предметной области). Например, PACK-product-management или PACK-machine-learning. Pack — единственный source-of-truth для доменного знания.
 
 **Q: Безопасны ли мои данные?**
-A: DS-strategy — приватный репозиторий на вашем GitHub. MEMORY.md хранится локально в `~/.claude/projects/`. Ничего не отправляется на сторонние серверы (кроме Anthropic API для Claude Code).
+A: Три зоны защиты: (1) **Локальная** — CLAUDE.md и memory/ на вашем компьютере, защищены на уровне ОС; (2) **GitHub** — DS-strategy и Pack — приватные репозитории на вашем аккаунте; (3) **Платформа** — per-user OAuth, изоляция данных пользователей. Anthropic API [не использует данные для обучения](https://www.anthropic.com/policies/privacy-policy). Секреты (API-ключи, токены) хранятся в `~/.config/`, не в git. Подробнее: [LEARNING-PATH.md § 8.5](docs/LEARNING-PATH.md#85-безопасность-в-iwe).
+
+**Q: Claude видит мои пароли и API-ключи?**
+A: Нет. Claude Code видит только файлы в рабочей директории и исполняет только команды из whitelist (`.claude/settings.local.json`). Секреты хранятся в `~/.config/` и environment variables — за пределами рабочего пространства.
 
 ---
 

@@ -25,6 +25,7 @@
 1. **Knowledge Extraction** → прочитай и выполни `roles/extractor/prompts/session-close.md`:
    - Собрать отложенные captures + проверить пропущенные
    - Классифицировать → маршрутизировать → формализовать → валидировать
+   - **MCP-проверка:** `knowledge-mcp search` → нет дубликатов в Pack
    - Показать Extraction Report → получить одобрение
    - Применить одобренные (accept → Pack/CLAUDE.md/memory)
 2. Обновить MEMORY.md (статус РП)
@@ -40,6 +41,10 @@
    - Недоделка по РП → context file (секция «Осталось»)
    - Идея развития системы → `<repo>/MAPSTRATEGIC.md`
    - Новая задача → `DS-strategy/inbox/captures.md` или fleeting-notes.md
+   - Зерно для поста → `DS-strategy/drafts/draft-list.md`
+9. **Draft-list проверка:**
+   - Были captures в Pack? → Предложить: «Pack обогащён — добавить черновик для поста?»
+   - Обновить draft-list.md если создавались черновики в этой сессии
 
 ---
 
@@ -74,9 +79,11 @@
 - [ ] MEMORY.md обновлён (статусы РП)
 - [ ] DS-strategy/current/Plan обновлён
 - [ ] Captures применены
+- [ ] **MCP-проверка:** `knowledge-mcp search` → captures не дублируют существующее в Pack
 - [ ] **Selective Reindex:** Pack изменены? → `selective-reindex.sh`
 - [ ] **Repo CLAUDE.md:** feat-коммиты → новые правила для CLAUDE.md репо?
 - [ ] **WP context:** коммиты реализуют пункт WP-плана → пункт done?
+- [ ] **Draft-list:** Pack обогащён → предложить черновик? Черновики из сессии → draft-list обновлён?
 - [ ] Backup → DS-strategy/exocortex/ синхронизирован
 - [ ] Context file: done → `mv inbox/WP-*.md → archive/wp-contexts/` (сразу при Close)
 - [ ] Отчёт Close сформирован
