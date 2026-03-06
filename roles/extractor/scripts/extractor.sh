@@ -176,6 +176,23 @@ case "$1" in
         notify_telegram "session-import"
         ;;
 
+    "session-tasks")
+        log "Running session-tasks extraction"
+        run_claude "session-tasks"
+        # Дополнительный стейдж INBOX-TASKS.md (run_claude стейджит только captures.md и extraction-reports/)
+        STRATEGY_DIR="$WORKSPACE/DS-strategy"
+        if [ -d "$STRATEGY_DIR/.git" ]; then
+            git -C "$STRATEGY_DIR" add inbox/INBOX-TASKS.md >> "$LOG_FILE" 2>&1 || true
+            if ! git -C "$STRATEGY_DIR" diff --cached --quiet 2>/dev/null; then
+                git -C "$STRATEGY_DIR" commit -m "session-tasks: tasks extracted $DATE" >> "$LOG_FILE" 2>&1 \
+                    && log "Committed INBOX-TASKS.md" \
+                    || log "WARN: git commit failed"
+                git -C "$STRATEGY_DIR" push >> "$LOG_FILE" 2>&1 && log "Pushed DS-strategy" || log "WARN: git push failed"
+            fi
+        fi
+        notify_telegram "session-tasks"
+        ;;
+
     "on-demand")
         log "Running on-demand extraction"
         run_claude "on-demand"
@@ -198,6 +215,7 @@ case "$1" in
         echo "  session-close  Экстракция при закрытии сессии"
         echo "  on-demand      Экстракция по запросу"
     echo "  archive-review Переобработка архива (раз в месяц)"
+  echo "  session-tasks  Извлечение задач из сессии → INBOX-TASKS.md"
         exit 1
         ;;
 esac
