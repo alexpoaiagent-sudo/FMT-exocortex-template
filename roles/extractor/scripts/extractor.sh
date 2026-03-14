@@ -22,7 +22,7 @@ ENV_FILE="/Users/alexander/.config/aist/env"
 # AI CLI: переопределение через переменные окружения (см. strategist.sh)
 AI_CLI="${AI_CLI:-$CLAUDE_PATH}"
 AI_CLI_PROMPT_FLAG="${AI_CLI_PROMPT_FLAG:--p}"
-AI_CLI_EXTRA_FLAGS="${AI_CLI_EXTRA_FLAGS:---dangerously-skip-permissions --allowedTools Read,Write,Edit,Glob,Grep,Bash}"
+AI_CLI_EXTRA_FLAGS="${AI_CLI_EXTRA_FLAGS:---dangerously-skip-permissions --allowedTools Read,Write,Edit,Glob,Grep,Bash --model claude-sonnet-4-6}"
 
 # Создаём папку для логов
 mkdir -p "$LOG_DIR"
@@ -85,6 +85,9 @@ $extra_args"
     log "Command file: $command_path"
 
     cd "$WORKSPACE"
+
+    # Unset CLAUDECODE to allow nested sessions
+    unset CLAUDECODE
 
     # Запуск AI CLI с промптом
     "$AI_CLI" $AI_CLI_EXTRA_FLAGS \

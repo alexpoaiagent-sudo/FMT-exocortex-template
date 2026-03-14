@@ -18,7 +18,7 @@ CLAUDE_PATH="/usr/local/bin/claude"
 #   AI_CLI=aider AI_CLI_PROMPT_FLAG=--message AI_CLI_EXTRA_FLAGS="" bash strategist.sh morning
 AI_CLI="${AI_CLI:-$CLAUDE_PATH}"
 AI_CLI_PROMPT_FLAG="${AI_CLI_PROMPT_FLAG:--p}"
-AI_CLI_EXTRA_FLAGS="${AI_CLI_EXTRA_FLAGS:---dangerously-skip-permissions --allowedTools Read,Write,Edit,Glob,Grep,Bash}"
+AI_CLI_EXTRA_FLAGS="${AI_CLI_EXTRA_FLAGS:---dangerously-skip-permissions --allowedTools Read,Write,Edit,Glob,Grep,Bash --model claude-sonnet-4-6}"
 
 # Создаём папку для логов
 mkdir -p "$LOG_DIR"
@@ -87,6 +87,9 @@ run_claude() {
     log "Command file: $command_path"
 
     cd "$WORKSPACE"
+
+    # Unset CLAUDECODE to allow nested sessions
+    unset CLAUDECODE
 
     # Запуск AI CLI с содержимым команды как промпт
     "$AI_CLI" $AI_CLI_EXTRA_FLAGS \
